@@ -5,8 +5,10 @@
   "author": "Willian Siqueira Nunes",
   "license": "ISC",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js"
   },
   "dependencies": {
     "express": "~4.18.2",
