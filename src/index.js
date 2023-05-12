@@ -1,8 +1,14 @@
 import express from 'express';
 import session from 'express-session';
+import cors from 'cors';
 const app = express();
 const port = 3030;
 
+
+app.use(cors({
+  origin: '*',
+  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+}));
 app.use(express.json());
 app.use(session({
   genid: () => 'id-' + (new Date()).getTime(),
