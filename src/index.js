@@ -171,8 +171,15 @@ app.get('/', (request, response) => {
   <li>GET: /recado/1 -> detalhe recado por id</li>
   <li>POST: /recado -> grava recedo</li>
   <li>PUT: /recado/:id -> edita recedo</li>
-  <li>DELETE: /recado:id -> deleta recado</li>
+  <li>DELETE: /recado/:id -> deleta recado</li>
   </ul>
+  <br><br>
+  <b>json cadastro usuario</b>
+  <pre><code>{ "nome": "", "email": "", "senha": "" }</code></pre>
+  <b>json login</b>
+  <pre><code>{ "email": "", "senha": "" }</code></pre>
+  <b>json recado</b>
+  <pre><code>{ "titulo": "", "descricao": "" }</code></pre>
   `;
   return response.send(texto);
 });
