@@ -7,7 +7,8 @@ const port = 3030;
 
 app.use(cors({
   origin: '*',
-  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+  credentials: true,
+  methods: ['GET','POST','DELETE','PUT']
 }));
 app.use(express.json());
 app.use(session({
