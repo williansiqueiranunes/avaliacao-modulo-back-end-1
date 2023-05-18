@@ -6,9 +6,8 @@ const port = 3030;
 
 
 app.use(cors({
-  origin: '*',
-  credentials: true,
-  methods: ['GET','POST','DELETE','PUT']
+  origin: 'https://avaliacao-modulo-back-end.onrender.com',
+  credentials: true
 }));
 app.use(express.json());
 app.use(session({
