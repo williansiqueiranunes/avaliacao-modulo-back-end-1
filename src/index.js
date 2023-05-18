@@ -6,8 +6,13 @@ const port = 3030;
 
 
 app.use(cors({
-  origin: 'https://avaliacao-modulo-back-end.onrender.com',
-  credentials: true
+  origin: [
+    'http://localhost:3030',
+    'http://127.0.0.1',
+    'https://avaliacao-modulo-back-end.onrender.com'
+  ],
+  credentials: true,
+  exposedHeaders: ['set-cookie']
 }));
 app.use(express.json());
 app.use(session({
