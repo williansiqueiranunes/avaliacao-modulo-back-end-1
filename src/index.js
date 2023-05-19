@@ -1,18 +1,14 @@
 import express from 'express';
 import session from 'express-session';
-//import cors from 'cors';
+import cors from 'cors';
 const app = express();
 const port = 3030;
 
 
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'https://avaliacao-modulo-back-end.onrender.com');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
-
-
+app.use(cors({
+  origin: 'https://avaliacao-modulo-back-end.onrender.com',
+  credentials: true
+}));
 app.use(express.json());
 app.use(session({
   genid: () => 'id-' + (new Date()).getTime(),
