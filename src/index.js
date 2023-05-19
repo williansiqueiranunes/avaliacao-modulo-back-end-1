@@ -1,23 +1,14 @@
 import express from 'express';
 import session from 'express-session';
-import cors from 'cors';
+//import cors from 'cors';
 const app = express();
 const port = 3030;
 
 
-app.use(cors({
-  credentials: true
-}));
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Methods',
-    'POST, PUT, PATCH, GET, DELETE, OPTIONS',
-  );
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Api-Key, X-Requested-With, Content-Type, Accept, Authorization',
-  );
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'https://avaliacao-modulo-back-end.onrender.com');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
