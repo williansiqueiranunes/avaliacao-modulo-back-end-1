@@ -1,26 +1,12 @@
 import express from 'express';
-import session from 'express-session';
 import cors from 'cors';
+import jwt from 'jsonwebtoken';
 const app = express();
 const port = 3030;
+const TOKEN_SECRET = '09f26e402586e2faa8da4c98a35f1b20d6b033c6097befa8be3486a829587fe2';
 
-
-app.use(cors({
-  origin: [
-    'http://localhost:3030',
-    'http://127.0.0.1',
-    'https://avaliacao-modulo-back-end.onrender.com'
-  ],
-  credentials: true,
-  exposedHeaders: ['set-cookie']
-}));
+app.use(cors());
 app.use(express.json());
-app.use(session({
-  genid: () => 'id-' + (new Date()).getTime(),
-  secret: 'fjm4938fhfjv92348hf9023cdk',
-  resave: false,
-  saveUninitialized: true
-}));
 
 let sequenciaIdUsuario = 0;
 let sequenciaIdRecado = 0;
@@ -97,19 +83,31 @@ const loginUsuario = (request, response) => {
   if (usuario == null || usuario.senha !== request.body.senha) {
     return response.status(400).send('Email ou senha inválidos');
   }
-  let login = usuarioLogado.find(u => u.sessionId == request.sessionID)
-  if (login == null) {
-    login = {sessionId: request.sessionID, usuarioId: usuario.id};
-    usuarioLogado.push(login);
+  const token = jwt.sign({email: request.body.email}, TOKEN_SECRET, { expiresIn: 84600 }); 
+  let indexLogin = usuarioLogado.findIndex(u => u.usuarioId == usuario.id);
+  if (indexLogin == -1) {
+    usuarioLogado.push({token: token, usuarioId: usuario.id});
+  } else {
+    usuarioLogado[indexLogin].token = token;
   }
-  response.status(200).send('login ok');
+  response.status(200).json({token});
 }
 const validaLogin = (request, response, next) => {
-  const login = usuarioLogado.find(u => u.sessionId == request.sessionID)
+  const authHeader = request.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (token == null) {
+    return response.status(401).send('Informe o token');
+  }
+  const login = usuarioLogado.find(u => u.token == token);
   if (login == null) {
     return response.status(401).send('Não foi feito o login, entre em /login');
   }
-  next();
+  jwt.verify(token, TOKEN_SECRET, (err, user) => {
+    if (err) {
+      return res.sendStatus(403).send('Token invalido, entre em /login');
+    }
+    next();
+  });
 }
 const getIdUsuarioLogado = request => {
   let login = usuarioLogado.find(u => u.sessionId == request.sessionID)
