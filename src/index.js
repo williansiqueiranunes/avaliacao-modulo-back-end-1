@@ -136,7 +136,13 @@ const listarRecados = (request, response) => {
   if (size > 10) {
     size = 10;
   }
-  response.status(200).json(recadosUsuario.slice(page * size, page * size + size));
+  const pagens = Math.ceil(recadosUsuario.length / size);
+  const result = {
+    next: (page + 2) > pagens ? '' : 'page=' + (page + 2),
+    prev: page <= 0 ? '' : 'page=' + page,
+    data: recadosUsuario.slice(page * size, page * size + size)
+  }
+  response.status(200).json(result);
 }
 const obterRecadoID = (request, response) => {
   const id = parseInt(request.params.id);
