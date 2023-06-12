@@ -124,7 +124,19 @@ const adicionarRecado = (request, response) => {
   response.status(200).json(recado);
 }
 const listarRecados = (request, response) => {
-  response.status(200).json(recados.filter(r => r.usuarioId == getIdUsuarioLogado(request)));
+  const recadosUsuario = recados.filter(r => r.usuarioId == getIdUsuarioLogado(request));
+  let page = request.query.page != null ? (parseInt(request.query.page) - 1) : 0;
+  let size = request.query.size != null ? parseInt(request.query.size) : 0;
+  if (page < 0) {
+    page = 0;
+  }
+  if (size <= 0) {
+    size = 6;
+  }
+  if (size > 10) {
+    size = 10;
+  }
+  response.status(200).json(recadosUsuario.slice(page * size, page * size + size));
 }
 const obterRecadoID = (request, response) => {
   const id = parseInt(request.params.id);
@@ -170,12 +182,17 @@ app.get('/', (request, response) => {
   <ul>
   <li>POST: /usuario -> add novo usuario</li>
   <li>POST: /login -> login no sistema</li>
-  <li>GET: /recado -> lista recados</li>
+  <li>GET: /recado -> lista recados (6 primeiros)</li>
+  <li>GET: /recado?page=1 -> Proxima pagina de recados</li>
+  <li>GET: /recado?page=1&size=8 -> Numero de recados por pagina (max 10)</li>
   <li>GET: /recado/1 -> detalhe recado por id</li>
   <li>POST: /recado -> grava recedo</li>
   <li>PUT: /recado/:id -> edita recedo</li>
   <li>DELETE: /recado/:id -> deleta recado</li>
   </ul>
+  <br><br>
+  <b>Autencicação por token (headers)</b>
+  <pre><code>Key: Authorization - Value: token umaChaveRetornadaAposLogin</code></pre>
   <br><br>
   <b>json cadastro usuario</b>
   <pre><code>{ "nome": "", "email": "", "senha": "" }</code></pre>
